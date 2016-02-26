@@ -1,0 +1,48 @@
+!============================================================
+! CS-2200 Homework 1
+!
+! Please do not change mains functionality,
+! except to change the argument for fibonacci or to meet your
+! calling convention
+!============================================================
+
+main:       la $sp, stack		! load address of stack label into $sp
+            lw $sp, 0x0($sp)            ! FIXME: load desired value of the stack (defined at the label below) into $sp
+            la $at, fibonacci	        ! load address of fibnacci label into $at
+            addi $a0, $zero, 14 	        ! $a0 = 8, the fibonacci argument
+            jalr $at, $ra		! jump to fibonacci, set $ra to return addr
+            halt			! when we return, just halt
+
+return_arg: add $v0, $a0, $zero		! store argument as the return value
+	    jalr $ra, $zero		! return
+
+fibonacci:  addi $t0, $zero, 0    	! FIXME: change me to your fibonacci implementation
+	    beq $t0, $a0, return_arg	! If the argument is 0, return 1
+	    addi $t0, $zero, 1
+	    beq $t0, $a0, return_arg	! If the argument is 1, return 1
+
+	    addi $t1, $a0, -1		! Calculate n-1
+	    addi $t2, $a0, -2		! Calculate n-2
+
+	    addi $sp, $sp, -12		! allocate space for prev ra, return value, and n-2 parameter
+	    sw $ra, 0x0($sp)		! store return address on the stack
+	    sw $t2, 0x8($sp)		! store n-2 parameter on the stack
+
+	    add $a0, $t1, $zero		! store n-1 as new argument in $a0
+	    la $at, fibonacci		! load address of fibonacci into $at
+	    jalr $at, $ra		! call fibonacci(n-1)
+
+	    sw $v0, 0x4($sp)		! store return value on stock
+	    lw $t2, 0x8($sp)		! load n-2 parameter
+
+	    add $a0, $t2, $zero		! store n-2 as new argument in $a0
+	    la $at, fibonacci		! load address of fibonacci into $at
+	    jalr $at, $ra		! call fibonacci(n-2)
+
+	    lw $s1, 0x4($sp)		! load part of final return value
+	    add $v0, $v0, $s1		! get final return value
+	    lw $ra, 0x0($sp)		! load previous return address
+	    addi $sp, $sp, 12		! move stack pointer back
+	    jalr $ra, $zero		! return
+
+stack:	    .word 0x4000		! the stack begins here

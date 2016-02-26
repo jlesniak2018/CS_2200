@@ -1,0 +1,26 @@
+1.a. Registers are like memory, but they are located inside the processor, which makes accessing them and their contents faster than retrieving operands from memory. If a program is going to be 	    accessing certain values or data, then it's most efficient to store them in and access them from registers. List of the registers and their uses:
+	Register 0: This register is always 0 and any values written to it are discarded
+	Register 1: This register should not be used and is reserved for the assembler, which uses it to process pseudo-instructions
+	Register 2: Any return value from a subroutine call is stored in register 2
+	Register 3: Caller-saved register used to pass arguments into subroutines
+	Register 4: Caller-saved register used to pass arguments into subroutines
+	Register 5: Caller-saved register used to pass arguments into subroutines
+	Register 6: Caller-saved register used to store any temporary values
+	Register 7: Caller-saved register used to store any temporary values
+	Register 8: Caller-saved register used to store any temporary values
+	Register 9: Callee-saved register that the caller can assume will not change upon the return from a subroutine. This register should be used for values that need to be preserved after many subroutine calls
+	Register 10: Callee-saved register that the caller can assume will not change upon the return from a subroutine. This register should be used for values that need to be preserved after many subroutine calls
+	Register 11: Callee-saved register that the caller can assume will not change upon the return from a subroutine. This register should be used for values that need to be preserved after many subroutine calls
+	Register 12: Used to handle interrupts
+	Register 13: Holds the memory address of the top of the stack
+	Register 14: Holds the first memory address on the activation record of the currently executing process
+	Register 15: Holds the memory address that the current subroutine should return to when it's finished
+
+1.b. The stack is accessed via the stack pointer, which points to the top of the stack. Generally the stack grows from high memory addresses to low memory addresses.
+
+1.c. Define the mechanics of the call, including what the caller does to initiate a
+procedure call, what the callee does at the beginning of a procedure, what the callee does at
+the end of a procedure to return to the caller, and what the caller does to clean up after the
+procedure returned.
+	At the beginning of the call, the caller first saves any of the t-registers on the stack (if needed), places any additional parameters on the stack (if needed), allocates space for any additional return values to be stored on the stack (if needed), saves the previous return address on the stack, and finally executes the jalr call. At the beginning of the procedure, the callee first stores the previous frame pointer on the stack then copies the contents of the stack pointer into the frame pointer (This is a suggested technique, but it's not mandatory. Keeping track of frame pointers is especially advantageous when the program is complex and has many subroutine calls, as well as in scenarios with conditional statements that could lead to constant allocation and deallocation. As opposed to having to follow the stack pointer around, it's generally easier to just just keep track of the frame pointer for each activation frame and access contents from the stack using it. Since this program was not overly complex, I chose to not use frame pointers). The callee then saves any s-registers to the stack that it plans on using during its execution, allocates space on the stack for any local variables, and then, right before returning, restores any s-register values from the stack. Once the procedure has returned, the caller restores the previous return address to the $ra register, stores any additional return values (if needed), discards additional parameters, and restores any saved t-registers as needed. 
+
