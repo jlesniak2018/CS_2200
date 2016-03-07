@@ -1,11 +1,14 @@
-la $a0, loop
-jalr $a0, $ra
-addi $a4, $zero, 9
-sw $a4, 0x4($zero)
-add $zero, $zero, $zero
-loop: addi $a1, $zero, 9
-add $a2, $a1, $a1
-sw $a2, 0x0($zero)
-lw $a3, 0x0($zero)
-addi $a3, $a3, 2
-sw $a3, 0x0($zero)
+addi $s0, $zero, 10
+sw $zero, 0x0($zero)
+first_loop: add $a0, $a0, 1
+sw $a0, 0x10($zero)
+beq $a0, $s0, mem_loop
+beq $zero, $zero, first_loop
+
+mem_loop: lw $a1, 0x0($zero)
+addi $a1, $a1, 1
+sw $a1, 0x0($zero)
+beq $a1, $s0, done
+beq $zero, $zero, mem_loop
+
+done: add $zero, $zero, $zero

@@ -1,0 +1,22 @@
+1) What does the '-g' flag present in the gcc command do?
+	It enables the built in debugging support that allows us to use GDB for debugging.
+
+2) What is the value of the ‘char*‘ argument that was passed last into the print scrambled() function? Can you guess what caused the segmentation fault based on this information?
+	The value is 0x0, which means it's null. Trying to dereference a null pointer causes the segmentation fault.
+
+3) What is the address of the stack pointer and frame pointer before the seg fault? Based on this
+information, can you figure out where the ‘char*‘ argument is stored on the stack before the segmentation fault occurred?
+	Before the seg fault, the address of the stack pointer is 0x7fffffffde90 and the address of the frame pointer is 0x7fffffffdeb0. Since I am using a 64-bit system and memory address grow towards lower addresses, based on this information the char* argument is stored at the memory address 8 bytes back, which is 0x7fffffffde98.
+
+4) Part 1. In which function did the segfault occur?
+   	It occurred in the setint function.
+   Part 2. Which line of the source code caused the segfault?
+	Line 8 of the source code caused the segfault.
+   Part 3. Who is the caller of this function?
+	Main is the caller of this function.
+   Part 4. What is the PC address at which the segfault occurred?
+	The PC address where the segfault occurred is 0x400628.
+
+5) Memset is linked to the address 0x7ffff7a9e190 in memory. I figured this out by first setting a break point at main, running the program, and then, after the linker's initial run, by setting a break point at memset, which then gave the address in memory to which the function memset was linked to.
+
+6) 
